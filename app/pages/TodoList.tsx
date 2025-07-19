@@ -1,7 +1,39 @@
-import { Input, Radio, Select } from "antd";
+import { Button, Checkbox, Input, Radio, Select } from "antd";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actionCreator } from "~/store/actions";
+import { v4 as idv4 } from "uuid";
+import { todoListSelector } from "~/store/selectors";
 
+type TodoListProps = {
+    id: string;
+    title: string;
+    completed: boolean;
+    priority: string;
+}
 
-export default function TodoList() {
+export default function Filter() {
+    const [title, setTitle] = useState("");
+    const [priority, setPriority] = useState<string | undefined>();
+
+    const dispatch = useDispatch();
+    const todoList = useSelector(todoListSelector);
+
+    const addTodo = () => {
+        // Dispatch an action to add a new todo
+        dispatch(actionCreator({
+            id: idv4(),
+            title: title || "New Task",
+            completed: false,
+            priority: priority || "Medium"
+        }))
+        console.log("Add Todo clicked");
+        // Reset input fields
+        setTitle("");
+        setPriority("Medium");
+        // Example: dispatch({ type: "todoList/addTodo", payload: { title: "New Task" } });
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <Input placeholder="Search task" />
@@ -15,6 +47,8 @@ export default function TodoList() {
             <div>
                 <Select 
                     placeholder="Filter by status"
+                    mode="multiple"
+                    style={{ width: '100%' }}
                     options={[
                         { label: 'Hard', value: 'Hard' },
                         { label: 'Medium', value: 'Medium' },
@@ -22,6 +56,37 @@ export default function TodoList() {
                     ]}
                 />
             </div>
+            { todoList.map((todo: TodoListProps) => (
+                <TodoList key={todo.id} id={todo.id} title={todo.title} completed={todo.completed} priority={todo.priority} />
+            ))}
+            <div style={{ display: 'flex', gap: '16px', flexDirection: 'column', marginTop: '40px' }}>
+                <Input placeholder="Nhap ten task muon them" style={{ width: '100%' }} value={title} onChange={(e) => setTitle(e.target.value)} />
+                <Select
+                    placeholder="Select priority"
+                    style={{ width: '100%' }}
+                    options={[
+                        { label: 'High', value: 'High' },
+                        { label: 'Medium', value: 'Medium' },
+                        { label: 'Low', value: 'Low' }
+                    ]}
+                    value={priority}
+                    onChange={(value) => setPriority(value)}
+                    defaultValue={"Medium"}
+                />
+                <Button type="primary" onClick={addTodo}>Add Todo</Button>
+            </div>
+        </div>
+    )
+}
+
+const TodoList = ({id, title, completed, priority}: TodoListProps) => {;
+    return (
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
+            <Checkbox checked={completed}>{title}</Checkbox>
+            <span style={{ color: priority === "High" ? "red" : priority === "Medium" ? "orange" : "green" }}>
+                {priority}
+            </span>
+
         </div>
     )
 }
