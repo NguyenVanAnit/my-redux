@@ -5,3 +5,10 @@ export const actionCreator = (data: any) => {
         payload: data
     }
 }
+
+export const actionFilter = (data: string) => {
+    return {
+        type: "todoList/filter",
+        payload: data
+    }
+}

@@ -1,9 +1,12 @@
 import { Button, Checkbox, Input, Radio, Select } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actionCreator } from "~/store/actions";
+import { actionCreator, actionFilter } from "~/store/actions";
 import { v4 as idv4 } from "uuid";
-import { todoListSelector } from "~/store/selectors";
+import { rootSelector, todoListSelector } from "~/store/selectors";
+import Search from "antd/es/input/Search";
+import { todoSlice } from "~/store/slice/todoSlice";
+import { filtersSlice } from "~/store/slice/filterSlice";
 
 type TodoListProps = {
     id: string;
@@ -15,13 +18,20 @@ type TodoListProps = {
 export default function Filter() {
     const [title, setTitle] = useState("");
     const [priority, setPriority] = useState<string | undefined>();
+    const [searchText, setSearchText] = useState("");
+    // const [searchPriority, setSearchPriority] = useState<string | undefined>();
+    // const [searchStatus, setSearchStatus] = useState<string | undefined>();
 
     const dispatch = useDispatch();
-    const todoList = useSelector(todoListSelector);
+    const todoList = useSelector(rootSelector);
+    console.log('todoList', todoList);
+
+    const filters = useSelector((state) => state.filters);
+console.log("filters state", filters); // check có thấy search không
 
     const addTodo = () => {
         // Dispatch an action to add a new todo
-        dispatch(actionCreator({
+        dispatch(todoSlice.actions.addTodo({
             id: idv4(),
             title: title || "New Task",
             completed: false,
@@ -34,10 +44,15 @@ export default function Filter() {
         // Example: dispatch({ type: "todoList/addTodo", payload: { title: "New Task" } });
     }
 
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+        dispatch(filtersSlice.actions.searchFilterChange(value));
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Input placeholder="Search task" />
-            <Radio.Group 
+            <Input placeholder="Search task" onChange={(e) => handleSearch(e.target.value)} value={searchText} />
+            <Radio.Group
                 options={[
                     { label: 'All', value: 'all' },
                     { label: 'Completed', value: 'completed' },
