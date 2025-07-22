@@ -1,0 +1,20 @@
+{
+    "filter": {
+        "search": "Search",
+        "input": "Input",
+        "add": "Add",
+        "all": "All",
+        "completed": "Completed",
+        "pending": "Pending"
+    },
+    "add": {
+        "select_priority": "Select priority",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "filter_by_status": "Filter by status",
+        "hard": "Hard",
+        "easy": "Easy",
+        "add_todo": "Add Todo"
+    }
+}

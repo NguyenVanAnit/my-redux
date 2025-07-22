@@ -7,6 +7,9 @@ import { rootSelector, todoListSelector } from "~/store/selectors";
 import Search from "antd/es/input/Search";
 import { addNewTodo, todoSlice } from "~/store/slice/todoSlice";
 import { filtersSlice } from "~/store/slice/filterSlice";
+import { useTranslation } from "react-i18next";
+import '~/i18n/i18n';
+import { language } from "~/i18n/i18n";
 
 type TodoListProps = {
     id: string;
@@ -16,6 +19,9 @@ type TodoListProps = {
 }
 
 export default function Filter() {
+    const { i18n, t } = useTranslation([]);
+    const selectedLanguage = language[i18n.language as keyof typeof language] || language.en;
+    console.log('selectedLanguage', selectedLanguage);
     const [title, setTitle] = useState("");
     const [priority, setPriority] = useState<string | undefined>();
     const [searchText, setSearchText] = useState("");
@@ -59,25 +65,33 @@ export default function Filter() {
         dispatch(filtersSlice.actions.searchFilterChange(value));
     }
 
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <Input placeholder="Search task" onChange={(e) => handleSearch(e.target.value)} value={searchText} />
+            <Select onChange={(value) => changeLanguage(value)} value={selectedLanguage} style={{ width: '200px', marginBottom: '16px' }}>
+                <Select.Option value="vi">{language.vi}</Select.Option>
+                <Select.Option value="en">{language.en}</Select.Option>
+            </Select>
+            <Input placeholder={t('filter.search')} onChange={(e) => handleSearch(e.target.value)} value={searchText} />
             <Radio.Group
                 options={[
-                    { label: 'All', value: 'all' },
-                    { label: 'Completed', value: 'completed' },
-                    { label: 'Pending', value: 'pending' }
+                    { label: t('filter.all'), value: 'all' },
+                    { label: t('filter.completed'), value: 'completed' },
+                    { label: t('filter.pending'), value: 'pending' }
                 ]}
             />
             <div>
-                <Select 
-                    placeholder="Filter by status"
+                <Select
+                    placeholder={t("add.filter_by_status")}
                     mode="multiple"
                     style={{ width: '100%' }}
                     options={[
-                        { label: 'Hard', value: 'Hard' },
-                        { label: 'Medium', value: 'Medium' },
-                        { label: 'Easy', value: 'Easy' }
+                        { label: t('filter.hard'), value: 'Hard' },
+                        { label: t('filter.medium'), value: 'Medium' },
+                        { label: t('filter.easy'), value: 'Easy' }
                     ]}
                 />
             </div>
@@ -85,20 +99,20 @@ export default function Filter() {
                 <TodoList key={todo.id} id={todo.id} title={todo.title} completed={todo.completed} priority={todo.priority} />
             ))}
             <div style={{ display: 'flex', gap: '16px', flexDirection: 'column', marginTop: '40px' }}>
-                <Input placeholder="Nhap ten task muon them" style={{ width: '100%' }} value={title} onChange={(e) => setTitle(e.target.value)} />
+                <Input placeholder={t('filter.add')} style={{ width: '100%' }} value={title} onChange={(e) => setTitle(e.target.value)} />
                 <Select
-                    placeholder="Select priority"
+                    placeholder={t('add.select_priority')}
                     style={{ width: '100%' }}
                     options={[
-                        { label: 'High', value: 'High' },
-                        { label: 'Medium', value: 'Medium' },
-                        { label: 'Low', value: 'Low' }
+                        { label: t('add.high'), value: 'High' },
+                        { label: t('add.medium'), value: 'Medium' },
+                        { label: t('add.low'), value: 'Low' }
                     ]}
                     value={priority}
                     onChange={(value) => setPriority(value)}
                     defaultValue={"Medium"}
                 />
-                <Button type="primary" onClick={addTodo}>Add Todo</Button>
+                <Button type="primary" onClick={addTodo}>{t('add.add_todo')}</Button>
             </div>
         </div>
     )

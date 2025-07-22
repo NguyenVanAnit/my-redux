@@ -1,0 +1,20 @@
+{
+    "filter": {
+        "search": "Tìm kiếm",
+        "input": "Nhập",
+        "add": "Thêm",
+        "all": "Tất cả",
+        "completed": "Đã hoàn thành",
+        "pending": "Chưa hoàn thành"
+    },
+    "add": {
+        "select_priority": "Chọn độ ưu tiên",
+        "high": "Cao",
+        "medium": "Trung bình",
+        "low": "Thấp",
+        "filter_by_status": "Lọc theo trạng thái",
+        "hard": "Khó",
+        "easy": "Dễ",
+        "add_todo": "Thêm Todo"
+    }
+}
