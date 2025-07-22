@@ -1,11 +1,11 @@
 import { Button, Checkbox, Input, Radio, Select } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { actionCreator, actionFilter } from "~/store/actions";
+// import type { AppDispatch } from "~/store";
 import { v4 as idv4 } from "uuid";
 import { rootSelector, todoListSelector } from "~/store/selectors";
 import Search from "antd/es/input/Search";
-import { todoSlice } from "~/store/slice/todoSlice";
+import { addNewTodo, todoSlice } from "~/store/slice/todoSlice";
 import { filtersSlice } from "~/store/slice/filterSlice";
 
 type TodoListProps = {
@@ -21,22 +21,32 @@ export default function Filter() {
     const [searchText, setSearchText] = useState("");
     // const [searchPriority, setSearchPriority] = useState<string | undefined>();
     // const [searchStatus, setSearchStatus] = useState<string | undefined>();
-
+    // const dispatch = useDispatch<AppDispatch>();
     const dispatch = useDispatch();
     const todoList = useSelector(rootSelector);
-    console.log('todoList', todoList);
-
-    const filters = useSelector((state) => state.filters);
-console.log("filters state", filters); // check có thấy search không
 
     const addTodo = () => {
         // Dispatch an action to add a new todo
-        dispatch(todoSlice.actions.addTodo({
+        // dispatch(todoSlice.actions.addTodo({
+        //     id: idv4(),
+        //     title: title || "New Task",
+        //     completed: false,
+        //     priority: priority || "Medium"
+        // }))
+        // dispatch(addTodos({
+        //     id: idv4(),
+        //     title: title || "New Task",
+        //     completed: false,
+        //     priority: priority || "Medium"
+        // }));
+
+        dispatch(addNewTodo({
             id: idv4(),
             title: title || "New Task",
             completed: false,
             priority: priority || "Medium"
-        }))
+        }));
+
         console.log("Add Todo clicked");
         // Reset input fields
         setTitle("");
